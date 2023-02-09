@@ -4,6 +4,9 @@ from threading import Thread
 
 import mysql.connector
 
+from .utils import Config
+
+c = Config()
 SLEEP_TIME = 3
 MONITOR = 1
 
@@ -20,10 +23,10 @@ def playIntro():
 
 def getLastRequestId():
     db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="streamy"
+            host=c.dbHost,
+            user=c.dbUser,
+            password=c.dbPassword,
+            database=c.dbName
         )
     cursor = db.cursor()
     sql = 'SELECT MAX(id) FROM requests;'
@@ -35,10 +38,10 @@ def getLastRequestId():
 
 def getLastRequestStreamId():
     db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="streamy"
+            host=c.dbHost,
+            user=c.dbUser,
+            password=c.dbPassword,
+            database=c.dbName
         )
     cursor = db.cursor()
     sql = 'SELECT stream_id FROM requests ORDER BY id DESC LIMIT 1;'
@@ -50,10 +53,10 @@ def getLastRequestStreamId():
 
 def getLastRequestUrl(stream_id):
     db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="streamy"
+            host=c.dbHost,
+            user=c.dbUser,
+            password=c.dbPassword,
+            database=c.dbName
         )
     cursor = db.cursor()
     sql = f'SELECT s.url FROM streams s INNER JOIN requests r ON s.id=r.stream_id WHERE s.id={stream_id} LIMIT 1;'
@@ -65,10 +68,10 @@ def getLastRequestUrl(stream_id):
 
 def getLastRequestChannelType():
     db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="streamy"
+            host=c.dbHost,
+            user=c.dbUser,
+            password=c.dbPassword,
+            database=c.dbName
         )
     cursor = db.cursor()
     sql = f'SELECT c.type FROM channels c INNER JOIN streams s ON c.id = s.channel_id INNER JOIN requests r ON s.id = r.stream_id ORDER BY r.id DESC LIMIT 1;'

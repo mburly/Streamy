@@ -12,10 +12,10 @@ API_KEY = c.youtubeApiKey
 
 def deleteStream(stream_id):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'DELETE FROM streams WHERE id={stream_id};'
@@ -26,10 +26,10 @@ def deleteStream(stream_id):
 
 def getStreamDbId(channel):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'SELECT s.id FROM streams s INNER JOIN channels c ON s.channel_id=c.id WHERE c.name="{channel}";'
@@ -62,10 +62,10 @@ def getYoutubeStreamUrl(channel):
     
 def getYoutubeChannels():
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = 'SELECT url FROM channels WHERE type = "Youtube";'
@@ -80,10 +80,10 @@ def getYoutubeChannels():
 
 def getChannelDbId(channel):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'SELECT id FROM channels WHERE name = "{channel}";'
@@ -95,10 +95,10 @@ def getChannelDbId(channel):
 
 def updateAvatar(channel, url):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     id = getChannelDbId(channel)
@@ -110,10 +110,10 @@ def updateAvatar(channel, url):
 
 def insertNewStream(channelDbId, streamUrl):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'INSERT INTO streams (channel_id, url, live) VALUES ({channelDbId},"{streamUrl}",1);'
@@ -124,10 +124,10 @@ def insertNewStream(channelDbId, streamUrl):
 
 def channelAvatarExists(channel):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'SELECT avatar_url FROM channels WHERE name = "{channel}";'
@@ -160,7 +160,7 @@ def run():
         while True:
             channels = getYoutubeChannels()
             if(channels == []):
-                time.sleep(3)
+                time.sleep(1)
             for channel in avatar_queue:
                 if not channelAvatarExists(channel):
                     url = getYoutubeProfilePictureUrl(channel)

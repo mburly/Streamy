@@ -4,6 +4,9 @@ import time
 
 import mysql.connector
 
+from .utils import Config
+
+c = Config()
 if(os.name == 'nt'):
     PROC_NAME = "mpv.exe"
 else:
@@ -11,10 +14,10 @@ else:
 
 def isRequestFulfilled():
     db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="streamy"
+            host=c.dbHost,
+            user=c.dbUser,
+            password=c.dbPassword,
+            database=c.dbName
         )
     cursor = db.cursor()
     sql = f'SELECT done FROM requests ORDER BY id DESC LIMIT 1;'

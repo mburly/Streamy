@@ -24,10 +24,10 @@ def getOAuth(client_id, client_secret):
 
 def getTwitchChannels():
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = 'SELECT url FROM channels WHERE type = "Twitch";'
@@ -50,10 +50,10 @@ def isTwitchStreamLive(channel):
 
 def getChannelDbId(channel):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'SELECT id FROM channels WHERE name = "{channel}";'
@@ -65,10 +65,10 @@ def getChannelDbId(channel):
 
 def getStreamDbId(channel):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'SELECT s.id FROM streams s INNER JOIN channels c ON s.channel_id=c.id WHERE c.name="{channel}";'
@@ -80,10 +80,10 @@ def getStreamDbId(channel):
 
 def isStreamActive(channel_id):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'SELECT live FROM streams WHERE channel_id={channel_id} ORDER BY id DESC LIMIT 1;'
@@ -98,10 +98,10 @@ def isStreamActive(channel_id):
     
 def insertNewStream(channel, channelDbId):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'INSERT INTO streams (channel_id, url, live) VALUES ({channelDbId},"https://twitch.tv/{channel}",1);'
@@ -112,10 +112,10 @@ def insertNewStream(channel, channelDbId):
 
 def deleteStream(stream_id):
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'DELETE FROM streams WHERE id={stream_id};'
@@ -126,10 +126,10 @@ def deleteStream(stream_id):
 
 def deleteStreams():
     db = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="",
-                database="streamy"
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
             )
     cursor = db.cursor()
     sql = f'DELETE FROM streams;'

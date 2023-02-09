@@ -202,7 +202,7 @@ $('body').on('click', '#removeChannelsDonebutton', function() {
 });
 
 function getTwitchAuthorization() {
-    let url = `https://id.twitch.tv/oauth2/token?client_id=bgv0b6ocvx05rbilvno2hqp97sgtol&client_secret=9mhxoalmwo20bh5ytoeyvhtwnvd1li&grant_type=client_credentials`;
+    let url = `https://id.twitch.tv/oauth2/token?client_id=bgv0b6ocvx05rbilvno2hqp97sgtol&client_secret=c52da1t3xcky0s2voleiqfiphff72x&grant_type=client_credentials`;
     return fetch(url, {
     method: "POST",
     })
@@ -216,10 +216,7 @@ async function getChannel(channel_name) {
     const endpoint = "https://api.twitch.tv/helix/users?login=" + channel_name;
     let authorizationObject = await getTwitchAuthorization();
     let { access_token, expires_in, token_type } = authorizationObject;
-    //token_type first letter must be uppercase    
-    token_type =
-    token_type.substring(0, 1).toUpperCase() +
-    token_type.substring(1, token_type.length);
+    token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
     let authorization = `${token_type} ${access_token}`;
     let headers = {
     authorization,
