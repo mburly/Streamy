@@ -3,8 +3,29 @@
     ignore_user_abort(1);
     ob_start();
     $in = getRequestInfo();
+    $configFile = fopen("../streamy.ini", "r") or die("Unable to open file!");
+    $host = '';
+    $user = '';
+    $password = '';
+    $dbname = 'streamy';
+    while(!feof($configFile)) {
+        $line = fgets($configFile);
+        if(strpos($line, "host =") !== false)
+        {
+            $host .= rtrim(explode("= ", $line)[1], "\r\n");
+        }
+        else if(strpos($line, "user =") !== false)
+        {
+            $user .= rtrim(explode("= ", $line)[1], "\r\n");
+        }
+        else if(strpos($line, "password =") !== false)
+        {
+            $password .= rtrim(explode("= ", $line)[1], "\r\n");
+        }
+    }
+    fclose($configFile);
 
-    $conn = new mysqli("localhost", "root", "", "streamy"); 
+    $conn = new mysqli($host, $user, $password, $dbname); 
     if($conn->connect_error) {
         returnWithError($conn->connect_error);
     }
