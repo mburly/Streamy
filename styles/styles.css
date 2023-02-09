@@ -1,0 +1,354 @@
+@media (max-width: 480px) {
+    #addChannelCard {
+        width:370px !important;
+    }
+
+    #streamsPanel {
+        width:360px !important;
+    }
+
+    .button-group {
+        margin-top:15px !important;
+        display: inline-block !important;
+    }
+
+    #editChannelsButton {
+        margin-right:250px !important;
+    }
+
+    #addChannelDoneButton {
+        margin-top:10px !important; 
+    }
+}
+
+html {
+    background:#18183b;
+}
+
+body {
+    background:#18183b;
+    height:100%;
+}
+
+nav {
+    border-bottom:1px solid black;
+}
+
+.navbar {
+    background-image: url("../images/triangles.png");
+}
+
+#addChannelCard {
+    margin-top:25px;
+    margin-left:auto;
+    margin-right:auto;
+    width:500px;
+}
+
+#logo {
+    border:1.5px solid black;
+    opacity:80%;
+}
+
+#logo:hover {
+    opacity:90%;
+}
+
+#logo:active {
+    opacity:100%;
+}
+
+.channel-input {
+    width:300px;
+}
+
+#streamsPanel {
+    background:white;
+    width:1000px;
+    margin-top:25px;
+    margin-bottom:25px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.channel-info {
+    display:block;
+}
+
+.channel-image {
+    height:75px;
+    width:75px;
+    border-radius:50%;
+    border:2px solid #047000;
+}
+
+.channel-name {
+    margin-left:10px;
+    font-weight:700;
+    color:#047000;
+    width:300px;
+    max-width:300px;
+}
+
+.channel-info-title-text {
+    margin-left:20px;
+    max-width:500px;
+    font-weight:600;
+}
+
+.channel-source {
+    margin-left:auto;
+    margin-right:10px;
+}
+
+.channel-source-icon {
+    font-size:28px;
+    vertical-align: sub;
+}
+
+.source-twitch {
+    color:#6441a5;
+}
+
+.source-youtube {
+    color:red;
+}
+
+.channel-view-count {
+    color:black;
+    margin-right:5px;
+    font-weight:700;
+}
+
+.panel-heading {
+    background:#047000 !important;
+}
+
+#badChannelMessage {
+    display:none;
+    width:425px;
+    height:100px;
+    font-size:16px;
+    margin-top:5px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.button.is-primary {
+    background-color:#047000;
+}
+
+.button.is-primary:hover {
+    background-color:#035500;
+}
+
+.panel-tabs {
+    border-top:1px solid black;
+}
+
+.footer-text {
+    color:white;
+    display: inline-block;
+    width:100%;
+    text-align:center;
+    opacity:50%;
+    margin-top:250px;
+}
+
+#forceCloseButton, #refreshButton, #addChannelButton, #editChannelsButton, #editChannelsDoneButton, #removeChannelsButton, #removeChannelsDonebutton {
+    float:right;
+    height:25px;
+    opacity:50%;
+}
+
+#forceCloseButton:hover {
+    opacity:100%;
+}
+
+.close-button {
+    float:right;
+    height:25px;
+    opacity:50%;
+}
+
+#removeChannelsDonebutton:hover {
+    opacity:100%;
+}
+
+.close-button:hover {
+    opacity:100%;
+}
+
+#closeButtonContainer {
+    margin-left:auto;
+}
+
+#refreshButton:hover {
+    opacity:100%;
+}
+
+#addChannelButton:hover {
+    opacity:100%;
+}
+
+#removeChannelsButton:hover {
+    opacity:100%;
+}
+
+#removeChannelsButton {
+    margin-right:15px;
+}
+
+#removeChannelsDonebutton {
+    margin-right:15px;
+}
+
+#refreshButton {
+    margin-right:15px;
+}
+
+#addChannelButton {
+    margin-right:15px;
+}
+
+#editChannelsButton {
+    margin-right:15px;
+}
+
+#editChannelsButton:hover {
+    opacity:100%;
+}
+
+#editChannelsDoneButton {
+    margin-right:15px;
+}
+
+#editChannelsDoneButton:hover {
+    opacity:100%;
+}
+
+#addChannelCard {
+    display:none;
+    animation: fadeIn 1s;
+}
+
+.github-icon {
+    margin-bottom:15px;
+    color:white;
+    opacity:70%;
+}
+
+.github-icon:hover {
+    opacity:100%;
+}
+
+.panel-block {
+    animation: fadeIn 1s;
+}
+
+.panel-block:active {
+    background-color:#c6c6c6;
+}
+
+.channel-name-input {
+    animation: fadeIn 1s;
+}
+
+
+.placeholder-1 {
+    background-color: #8000004a;
+}
+
+.placeholder-2 {
+    background-color: #00801a4a;
+}
+
+.placeholder-3 {
+    background-color: #0032804a;
+}
+
+.placeholder-4 {
+    background-color: #3a00804a;
+}
+
+.placeholder-5 {
+    background-color: #8078004a;
+}
+
+
+ /* The snackbar - position it at the bottom and in the middle of the screen */
+ #snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: white;
+    color: green; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+    border:2px solid #047000;
+  }
+  
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  } 
+
+@keyframes fadeIn {
+from {
+    opacity: 0;
+}
+
+to {
+    opacity: 1;
+}
+}
+
+.fadeIn {
+animation-name: fadeIn;
+}
+
+@keyframes fadeOut {
+    from {
+        display:block;
+        opacity: 1;
+    }
+    
+    to {
+        display:none;
+        opacity: 0;
+    }
+    }
+    
+    .fadeOut {
+    animation-name: fadeOut;
+    }

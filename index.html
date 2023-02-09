@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamy - Home</title>
+    <link rel="stylesheet" href="lib/bulma/css/bulma.min.css">
+    <link rel="stylesheet" href="lib/fontawesome-pro-6.0.0-web/css/all.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="jquery-3.6.1.min.js"></script>
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand" id="navbarLogo">
+      <a class="navbar-item" href="">
+        <img id="logo" src="images/streamy-logo.png" width="112" height="28">
+      </a>
+    </div>
+
+  </nav>
+
+  <div class="container">
+    <div class="card" id="addChannelCard">
+      <header class="card-header">
+        <p class="card-header-title">
+          Add Channel
+          <span id="closeButtonContainer">
+            <button class="button is-danger close-button" id="closeAddChannelButton">Close</button>
+          </span>
+        </p>
+      </header>
+      <div class="card-content">
+        <article class="message is-danger" id="badChannelMessage">
+          <div class="message-header">
+            <p>Unable to add channel</p>
+          </div>
+          <div class="message-body">
+            Invalid channel URL provided. Please try again.
+          </div>
+        </article>
+        <div class="content">
+          <div class="field">
+            <label class="label">Channel URL</label>
+            <div class="control">
+              <input class="input channel-input" type="text" id="channelUrlInput" placeholder="Channel URL">
+              <button class="button is-primary" id="addChannelButtonSubmit">Add Channel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <article class="panel is-primary" id="streamsPanel">
+      <p class="panel-heading" id="streamsPanelHeading">
+        Live Channels
+        <span class="button-group">
+          <span class="button is-danger" id="forceCloseButton">Close stream</span>
+          <span class="button is-info" id="refreshButton">Refresh</span>
+          <span class="button is-danger" id="removeChannelsButton">Remove</span>
+          <span class="button is-dark" id="editChannelsButton">Edit</span>
+          <span class="button is-success" id="addChannelButton">Add</span>
+        </span>
+      </p>
+      <!-- <p class="panel-tabs">
+        <a class="is-active">All</a>
+        <a>YouTube</a>
+        <a>Twitch</a>
+        <a>Kick</a>
+        <a>DLive</a>
+      </p> -->
+      <div class="panel-block">
+      </div>
+    </article>
+  </div>
+  <div id="snackbar">Request sent!</div>
+  <!-- <buton class="button" id="foo">Foo me</buton> -->
+  <script src="js/main.js"></script>
+  <footer>
+    <span class="footer-text">
+      <div>
+          <a href="https://github.com/mburly" target="_blank"><i class="fab fa-github-square fa-2x github-icon"></i></a>
+      </div>
+      <span>Made with ❤️ for my dad</span>
+    </span>
+  </footer>
+</body>
+</html>
