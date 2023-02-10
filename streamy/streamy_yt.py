@@ -141,28 +141,54 @@ def channelAvatarExists(channel):
 
 def getYoutubeProfilePictureUrl(channel_name):
     search_url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q={channel_name}&key={API_KEY}'
-    search_response = requests.get(search_url)
-    search_data = search_response.json()
-    channel_id = search_data['items'][0]['id']['channelId']
-    channel_url = f'https://www.googleapis.com/youtube/v3/channels?part=snippet&id={channel_id}&key={API_KEY}'
-    channel_response = requests.get(channel_url)
-    channel_data = channel_response.json()
-    profile_picture_url = channel_data['items'][0]['snippet']['thumbnails']['default']['url']
-    return profile_picture_url
-  
+    try:
+        search_response = requests.get(search_url)
+        search_data = search_response.json()
+        channel_id = search_data['items'][0]['id']['channelId']
+        channel_url = f'https://www.googleapis.com/youtube/v3/channels?part=snippet&id={channel_id}&key={API_KEY}'
+        channel_response = requests.get(channel_url)
+        channel_data = channel_response.json()
+        profile_picture_url = channel_data['items'][0]['snippet']['thumbnails']['default']['url']
+        return profile_picture_url
+    except:
+        return None
+
+# def getYoutubeStreamUrl(channel_name):
+#     print('making api call 1')
+#     api_key = c.youtubeApiKey
+#     url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={channel_name}&type=channel&key={api_key}"
+#     try:
+#         response = requests.get(url)
+#         if response.status_code == 200:
+#             data = response.json()
+#             channel_id = data["items"][0]["id"]["channelId"]
+#             url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channel_id}&type=video&eventType=live&key={api_key}"
+#             response = requests.get(url)
+#             if response.status_code == 200:
+#                 data = response.json()
+#                 for item in data["items"]:
+#                     video_id = item["id"]["videoId"]
+#                     video_url = f"https://www.youtube.com/watch?v={video_id}"
+#                     return video_url
+#             else:
+#                 return None
+#     except:
+#         return None
+
 def run():
     try:
         avatar_queue = getYoutubeChannels()
         channels = getYoutubeChannels()
         avatar_done = []
         live_channels = []
-        stream_urls = {}
         print('Listening for YouTube streams...')
         while True:
             print('[PING] streamy_yt.py')
             channels = getYoutubeChannels()
             if(channels == []):
-                time.sleep(1)
+                while(channels == []):
+                    time.sleep(1)
+                    channels = getYoutubeChannels()
             for channel in avatar_queue:
                 if not channelAvatarExists(channel):
                     url = getYoutubeProfilePictureUrl(channel)
@@ -190,5 +216,6 @@ def run():
                         insertNewStream(channelDbId, streamUrl)
                         if channel not in avatar_done:
                             avatar_queue.append(channel)
+            # time.sleep(60)
     except KeyboardInterrupt:
         return None

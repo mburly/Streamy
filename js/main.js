@@ -1,12 +1,13 @@
+var _active = false;
+var _state = '';
+var _oldNames = []
+var _removeChannels = []
+
 loadStreams()
 setInterval(function() {
     loadStreams();
 },3000);
 
-var _active = false;
-var _state = '';
-var _oldNames = []
-var _removeChannels = []
 
 var removeListener = function() {
     if(this.style.backgroundColor === "" || this.style.backgroundColor === "white") {
