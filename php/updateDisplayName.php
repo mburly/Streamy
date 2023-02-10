@@ -2,7 +2,6 @@
     set_time_limit(0);
     ignore_user_abort(1);
     ob_start();
-    $in = getRequestInfo();
     $configFile = fopen("../streamy.ini", "r") or die("Unable to open file!");
     $host = '';
     $user = '';
@@ -24,22 +23,16 @@
         }
     }
     fclose($configFile);
-
     $conn = new mysqli($host, $user, $password, $dbname); 
     if($conn->connect_error) {
         returnWithError($conn->connect_error);
     }
     else {
-        $display_name = $in["display_name"];
-        $channel = $in["channel"];
+        $display_name = $_POST["display_name"];
+        $channel = $_POST["channel"];
         $sql = 'UPDATE channels SET display_name = "' . $display_name . '" WHERE name = "' . $channel . '"';
         $conn->query($sql);
         returnInfo();
-    }
-
-    function getRequestInfo()
-    {
-        return json_decode(file_get_contents('php://input'), true);
     }
 
     function sendResultInfoAsJson( $obj )

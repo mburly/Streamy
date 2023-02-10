@@ -2,7 +2,6 @@
     set_time_limit(0);
     ignore_user_abort(1);
     ob_start();
-    $in = getRequestInfo();
     $configFile = fopen("../streamy.ini", "r") or die("Unable to open file!");
     $host = '';
     $user = '';
@@ -24,13 +23,12 @@
         }
     }
     fclose($configFile);
-
     $conn = new mysqli($host, $user, $password, $dbname); 
     if($conn->connect_error) {
         returnWithError($conn->connect_error);
     }
     else {
-        $stream_id = $in["stream_id"];
+        $stream_id = $_POST["stream_id"];
         $sql = 'INSERT INTO requests (stream_id, datetime, done) VALUES (' . $stream_id . ',NOW(),NULL);';
         $conn->query($sql);
         $sql = 'SELECT MAX(id) AS id FROM requests;';

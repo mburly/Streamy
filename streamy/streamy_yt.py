@@ -46,7 +46,7 @@ def getYoutubeStreamUrl(channel):
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    options.binary_location = r"C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+    options.binary_location = fr"{c.firefoxPath}"
     url = f'https://www.youtube.com/@{channel}'
     driver = webdriver.Firefox(options=options)
     driver.get(url)
@@ -156,8 +156,10 @@ def run():
         channels = getYoutubeChannels()
         avatar_done = []
         live_channels = []
+        stream_urls = {}
         print('Listening for YouTube streams...')
         while True:
+            print('[PING] streamy_yt.py')
             channels = getYoutubeChannels()
             if(channels == []):
                 time.sleep(1)

@@ -2,7 +2,6 @@
     set_time_limit(0);
     ignore_user_abort(1);
     ob_start();
-    $in = getRequestInfo();
     $configFile = fopen("../streamy.ini", "r") or die("Unable to open file!");
     $host = '';
     $user = '';
@@ -24,24 +23,21 @@
         }
     }
     fclose($configFile);
-
     $conn = new mysqli($host, $user, $password, $dbname); 
     if($conn->connect_error) {
         returnWithError($conn->connect_error);
     }
     else {
-        $name = $in["name"];
-        $type = $in["type"];
-        $url = $in["url"];
-        $avatarUrl = $in["avatar_url"];
+        $name = $_POST["name"];
+        $type = $_POST["type"];
+        $url = $_POST["url"];
+        $avatarUrl = "";
+        if($_POST["avatar_url"] != null) {
+            $avatarUrl = $_POST["avatar_url"];
+        }
         $sql = 'INSERT INTO channels (name, type, url, avatar_url) VALUES ("' . $name . '","' . $type . '","' . $url . '","' . $avatarUrl .  '");';
         $conn->query($sql);
         returnInfo();
-    }
-
-    function getRequestInfo()
-    {
-        return json_decode(file_get_contents('php://input'), true);
     }
 
     function sendResultInfoAsJson( $obj )

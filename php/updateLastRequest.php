@@ -2,7 +2,6 @@
     set_time_limit(0);
     ignore_user_abort(1);
     ob_start();
-    $in = getRequestInfo();
     $configFile = fopen("../streamy.ini", "r") or die("Unable to open file!");
     $host = '';
     $user = '';
@@ -24,7 +23,6 @@
         }
     }
     fclose($configFile);
-
     $conn = new mysqli($host, $user, $password, $dbname); 
     if($conn->connect_error) {
         returnWithError($conn->connect_error);
@@ -33,11 +31,6 @@
         $sql = 'UPDATE requests SET done = 1 WHERE id = (SELECT MAX(id) FROM requests)';
         $conn->query($sql);
         returnInfo();
-    }
-
-    function getRequestInfo()
-    {
-        return json_decode(file_get_contents('php://input'), true);
     }
 
     function sendResultInfoAsJson( $obj )

@@ -86,6 +86,7 @@ def run():
         prevId = getLastRequestId()
         print('Listening for requests...')
         while True:
+            print('[PING] listener_requests.py')
             id = getLastRequestId()
             if(prevId != id):
                 stream_id = getLastRequestStreamId()
@@ -97,6 +98,6 @@ def run():
                     Thread(target = playIntro).start()
                     Thread(target = playTwitchStream(url)).start()
             prevId = id
-            time.sleep(3)
+            time.sleep(2)
     except KeyboardInterrupt:
         return None

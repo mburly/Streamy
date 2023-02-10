@@ -145,6 +145,7 @@ def run():
     try:
         print('Streamy is running. Updating streams...')
         while True:
+            print('[PING] streamy.py')
             twitch_channels = getTwitchChannels()
             for channel in twitch_channels:
                 if(isTwitchStreamLive(channel)):
@@ -164,6 +165,6 @@ def run():
                         live_channels.remove(channel)
                         stream_id = getStreamDbId(channel)
                         deleteStream(stream_id)
-            time.sleep(3)
+            time.sleep(1)
     except KeyboardInterrupt:
         return None

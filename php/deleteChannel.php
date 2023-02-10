@@ -2,7 +2,6 @@
     set_time_limit(0);
     ignore_user_abort(1);
     ob_start();
-    $in = getRequestInfo();
     $configFile = fopen("../streamy.ini", "r") or die("Unable to open file!");
     $host = '';
     $user = '';
@@ -24,13 +23,12 @@
         }
     }
     fclose($configFile);
-
     $conn = new mysqli($host, $user, $password, $dbname); 
     if($conn->connect_error) {
         returnWithError($conn->connect_error);
     }
     else {
-        $name = $in["name"];
+        $name = $_POST["name"];
         $sql = 'SELECT id FROM channels WHERE name = "' . $name .  '";';
         $channel_id = $conn->query($sql)->fetch_assoc()["id"];
         $sql = 'DELETE FROM channels WHERE name = "' . $name . '";';
@@ -38,11 +36,6 @@
         $sql = 'DELETE FROM streams WHERE channel_id=' . $channel_id . ';';
         $conn->query($sql);
         returnInfo();
-    }
-
-    function getRequestInfo()
-    {
-        return json_decode(file_get_contents('php://input'), true);
     }
 
     function sendResultInfoAsJson( $obj )

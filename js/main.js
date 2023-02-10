@@ -35,15 +35,8 @@ $('body').on('click', '.panel-block', function() {
         return;
     }
     var id = $(this).attr('id').split('-');
-    var channel = id[0];
     var stream_id = id[1];
-    var jsonPayload = '{"stream_id":' + stream_id + '}';
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "php/request.php", false);
-    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    xhr.send(jsonPayload);
-    var data = JSON.parse(xhr.responseText);
-    var request_id = data["request_id"];
+    $.post("php/request.php", {stream_id: stream_id});
     var toast = document.getElementById("snackbar");
     toast.className = "show";
     setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
@@ -57,12 +50,11 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
     else {
         if(url.split('youtube.com/@').length > 1) {
             // youtube url
-            var name = url.split('@')[1];
-            var jsonPayload = '{"name":"' + name + '","url":"' + url + '","type":"Youtube"}';
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "php/addChannel.php", false);
-            xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-            xhr.send(jsonPayload);
+            var channel_name = url.split('@')[1];
+            $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Youtube"})
+            .done(function(data) {
+                console.log(data);
+            });
             var toast = document.getElementById("snackbar");
             toast.className = "show";
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
@@ -134,11 +126,7 @@ $('body').on('click', '#editChannelsDoneButton', function() {
             }
             else {
                 span.textContent = input.value;
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "php/updateDisplayName.php", false);
-                xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-                var jsonPayload = '{"channel":"' + input.id + '","display_name":"' + input.value + '"}';
-                xhr.send(jsonPayload);
+                $.post("php/addChannel.php", {channel: input.id, display_name: input.value});
             }
         }
         else {
@@ -181,11 +169,7 @@ $('body').on('click', '#removeChannelsDonebutton', function() {
 
     for(let i = 0; i < _removeChannels.length; i++) {
         var name = _removeChannels[i].split('-')[0];
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "php/deleteChannel.php", false);
-        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-        var jsonPayload = '{"name":"' + name + '"}';
-        xhr.send(jsonPayload);
+        $.post("php/deleteChannel.php", {name: name});
     }
 
     var doneButton = document.getElementById("removeChannelsDonebutton");
@@ -233,11 +217,7 @@ function addTwitchChannel(data, name, url) {
     if(data['data'].length > 0) {
         var url = 'https://www.twitch.tv/' + data['data'][0]['login'];
         var avatar_url = data['data'][0]['profile_image_url'];
-        var jsonPayload = '{"name":"' + name + '","url":"' + url + '","avatar_url":"' +  avatar_url + '","type":"Twitch"}';
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "php/addChannel.php", false);
-        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-        xhr.send(jsonPayload);
+        $.post("php/addChannel.php", {name: name, url: url, avatar_url: avatar_url, type: "Twitch"});
     }
     else {
         // display error
@@ -268,7 +248,7 @@ function loadStreams() {
                 name = data["display_names"][i];
             }
             if(avatar_url == "") {
-                avatar_url = "lib/fontawesome-pro-6.0.0-web/svgs/solid/user.svg";
+                avatar_url = "images/user.svg";
                 console.log(avatar_url);
             }
             if(type == "Youtube") {

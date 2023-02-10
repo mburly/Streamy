@@ -12,4 +12,5 @@ class Config:
         self.dbHost = self.config['Db']['host']
         self.dbUser = self.config['Db']['user']
         self.dbPassword = self.config['Db']['password']
+        self.firefoxPath = self.config['Firefox']['path']
         self.dbName = 'streamy'

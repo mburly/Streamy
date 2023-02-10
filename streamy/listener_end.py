@@ -50,6 +50,7 @@ def run():
     try:
         print('Listening for fulfilled requests...')
         while True:
+            print('[PING] listener_end.py')
             listenForFulfilledRequest()
     except KeyboardInterrupt:
         return None
