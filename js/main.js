@@ -127,7 +127,7 @@ $('body').on('click', '#editChannelsDoneButton', function() {
             }
             else {
                 span.textContent = input.value;
-                $.post("php/addChannel.php", {channel: input.id, display_name: input.value});
+                $.post("php/updateDisplayName.php", {channel: input.id, display_name: input.value});
             }
         }
         else {
