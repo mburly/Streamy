@@ -60,6 +60,27 @@ def getYoutubeStreamUrl(channel):
     else:
         return None
     
+# def getYoutubeStreamUrl(channel_name):
+#     api_key = c.youtubeApiKey
+#     url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={channel_name}&type=channel&key={api_key}"
+#     try:
+#         response = requests.get(url)
+#         if response.status_code == 200:
+#             data = response.json()
+#             channel_id = data["items"][0]["id"]["channelId"]
+#             url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channel_id}&type=video&eventType=live&key={api_key}"
+#             response = requests.get(url)
+#             if response.status_code == 200:
+#                 data = response.json()
+#                 for item in data["items"]:
+#                     video_id = item["id"]["videoId"]
+#                     video_url = f"https://www.youtube.com/watch?v={video_id}"
+#                     return video_url
+#             else:
+#                 return None
+#     except:
+#         return None
+    
 def getYoutubeChannels():
     db = mysql.connector.connect(
                 host=c.dbHost,
@@ -74,6 +95,24 @@ def getYoutubeChannels():
     channels = []
     for url in urls:
         channels.append(url[0].split('.com/@')[1])
+    cursor.close()
+    db.close()
+    return channels
+
+def getYoutubeChannelsNoAvatar():
+    db = mysql.connector.connect(
+                host=c.dbHost,
+                user=c.dbUser,
+                password=c.dbPassword,
+                database=c.dbName
+            )
+    cursor = db.cursor()
+    sql = 'SELECT name FROM channels WHERE avatar_url = " " OR avatar_url IS NULL;'
+    cursor.execute(sql)
+    names = cursor.fetchall()
+    channels = []
+    for name in names:
+        channels.append(name[0])
     cursor.close()
     db.close()
     return channels
@@ -153,37 +192,13 @@ def getYoutubeProfilePictureUrl(channel_name):
     except:
         return None
 
-# def getYoutubeStreamUrl(channel_name):
-#     print('making api call 1')
-#     api_key = c.youtubeApiKey
-#     url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={channel_name}&type=channel&key={api_key}"
-#     try:
-#         response = requests.get(url)
-#         if response.status_code == 200:
-#             data = response.json()
-#             channel_id = data["items"][0]["id"]["channelId"]
-#             url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={channel_id}&type=video&eventType=live&key={api_key}"
-#             response = requests.get(url)
-#             if response.status_code == 200:
-#                 data = response.json()
-#                 for item in data["items"]:
-#                     video_id = item["id"]["videoId"]
-#                     video_url = f"https://www.youtube.com/watch?v={video_id}"
-#                     return video_url
-#             else:
-#                 return None
-#     except:
-#         return None
-
 def run():
     try:
-        avatar_queue = getYoutubeChannels()
-        channels = getYoutubeChannels()
-        avatar_done = []
         live_channels = []
         print('Listening for YouTube streams...')
         while True:
             print('[PING] streamy_yt.py')
+            avatar_queue = getYoutubeChannelsNoAvatar()
             channels = getYoutubeChannels()
             if(channels == []):
                 while(channels == []):
@@ -193,13 +208,12 @@ def run():
                 if not channelAvatarExists(channel):
                     url = getYoutubeProfilePictureUrl(channel)
                     if(url is None):
+                        avatar_queue.remove(channel)
                         continue
                     updateAvatar(channel, url)
                     avatar_queue.remove(channel)
-                    avatar_done.append(channel)
                 else:
                     avatar_queue.remove(channel)
-                    avatar_done.append(channel)
             for channel in channels:
                 streamUrl = getYoutubeStreamUrl(channel)
                 print(f'{channel}: {streamUrl}')
@@ -208,14 +222,13 @@ def run():
                         stream_id = getStreamDbId(channel)
                         if stream_id is None:
                             continue
+                        live_channels.remove(channel)
                         deleteStream(stream_id)
                 else:
                     if channel not in live_channels:
                         live_channels.append(channel)
                         channelDbId = getChannelDbId(channel)
                         insertNewStream(channelDbId, streamUrl)
-                        if channel not in avatar_done:
-                            avatar_queue.append(channel)
             # time.sleep(60)
     except KeyboardInterrupt:
         return None

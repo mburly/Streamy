@@ -12,11 +12,17 @@ MONITOR = 1
 
 def playTwitchStream(stream):
     time.sleep(SLEEP_TIME)
-    subprocess.run(["streamlink", "-p", "mpv.exe", "-a", f"\"-fs-screen={MONITOR}\"", stream, "best", "--twitch-low-latency"])
+    try:
+        subprocess.run(["streamlink", "-p", "mpv.exe", "-a", f"\"-fs-screen={MONITOR}\"", stream, "best", "--twitch-low-latency"])
+    except:
+        return None
 
 def playYoutubeStream(stream):
     time.sleep(SLEEP_TIME)
-    subprocess.run(["streamlink", "-p", "mpv.exe", "-a", f"\"-fs-screen={MONITOR}\"", stream, "best"])
+    try:
+        subprocess.run(["streamlink", "-p", "mpv.exe", "-a", f"\"-fs-screen={MONITOR}\"", stream, "best"])
+    except:
+        return None
 
 def playIntro():
     subprocess.run(["mpv", "--fs", f"-fs-screen={MONITOR}", "--loop=no", 'streamy-intro.mp4'])
@@ -61,7 +67,10 @@ def getLastRequestUrl(stream_id):
     cursor = db.cursor()
     sql = f'SELECT s.url FROM streams s INNER JOIN requests r ON s.id=r.stream_id WHERE s.id={stream_id} LIMIT 1;'
     cursor.execute(sql)
-    url = cursor.fetchone()[0]
+    try:
+        url = cursor.fetchone()[0]
+    except:
+        return None
     cursor.close()
     db.close()
     return url
@@ -87,7 +96,10 @@ def run():
         print('Listening for requests...')
         while True:
             print('[PING] listener_requests.py')
-            id = getLastRequestId()
+            try:
+                id = getLastRequestId()
+            except:
+                id = getLastRequestId()
             if(prevId != id):
                 stream_id = getLastRequestStreamId()
                 url = getLastRequestUrl(stream_id)
@@ -98,6 +110,6 @@ def run():
                     Thread(target = playIntro).start()
                     Thread(target = playTwitchStream(url)).start()
             prevId = id
-            time.sleep(2)
+            time.sleep(3)
     except KeyboardInterrupt:
         return None

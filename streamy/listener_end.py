@@ -35,15 +35,21 @@ def isRequestFulfilled():
 def listenForFulfilledRequest():
     stream_running = True
     while(stream_running):
-        if(isRequestFulfilled()):
-            killMpv()
-            stream_running = False
+        try:
+            if(isRequestFulfilled()):
+                killMpv()
+                stream_running = False
+        except:
+            return None
         time.sleep(5)
 
 def killMpv():
     for proc in psutil.process_iter():
         if proc.name() == PROC_NAME:
-            proc.kill()
+            try:
+                proc.kill()
+            except:
+                return None
 
 
 def run():

@@ -54,7 +54,6 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
             var channel_name = url.split('@')[1];
             $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Youtube"})
             .done(function(data) {
-                console.log(data);
             });
             var toast = document.getElementById("snackbar");
             toast.className = "show";
@@ -63,7 +62,10 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
         }
         else if(url.split('twitch.tv/').length > 1) {
             // twitch url
-            getChannel(url.split('.tv/')[1]);
+            var channel_name = url.split('/')[1];
+            $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Twitch"})
+            .done(function(data) {
+            });
             var toast = document.getElementById("snackbar");
             toast.className = "show";
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
@@ -186,46 +188,6 @@ $('body').on('click', '#removeChannelsDonebutton', function() {
     _state = "";
 });
 
-function getTwitchAuthorization() {
-    let url = `https://id.twitch.tv/oauth2/token?client_id=bgv0b6ocvx05rbilvno2hqp97sgtol&client_secret=c52da1t3xcky0s2voleiqfiphff72x&grant_type=client_credentials`;
-    return fetch(url, {
-    method: "POST",
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        return data;
-    });
-}
-
-async function getChannel(channel_name) {
-    const endpoint = "https://api.twitch.tv/helix/users?login=" + channel_name;
-    let authorizationObject = await getTwitchAuthorization();
-    let { access_token, expires_in, token_type } = authorizationObject;
-    token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
-    let authorization = `${token_type} ${access_token}`;
-    let headers = {
-    authorization,
-    "Client-Id": "bgv0b6ocvx05rbilvno2hqp97sgtol",
-    };
-    fetch(endpoint, {
-    headers,
-    })
-    .then((res) => res.json())
-    .then((data) => addTwitchChannel(data, channel_name));
-}
-
-function addTwitchChannel(data, name, url) {
-    if(data['data'].length > 0) {
-        var url = 'https://www.twitch.tv/' + data['data'][0]['login'];
-        var avatar_url = data['data'][0]['profile_image_url'];
-        $.post("php/addChannel.php", {name: name, url: url, avatar_url: avatar_url, type: "Twitch"});
-    }
-    else {
-        // display error
-        show('badChannelMessage');
-    }
-}
-
 function loadStreams() {
     $.get("php/streams.php", function(data, status) {
         var data = JSON.parse(data);
@@ -250,7 +212,6 @@ function loadStreams() {
             }
             if(avatar_url == "") {
                 avatar_url = "images/user.svg";
-                console.log(avatar_url);
             }
             if(type == "Youtube") {
                 if(!elementExists(panel_id)) {

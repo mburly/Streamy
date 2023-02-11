@@ -38,10 +38,11 @@
         returnWithError($conn->connect_error);
     }
     else {
-        $name = $_POST["name"];
-        $type = $_POST["type"];
-        $url = $_POST["url"];
-        $avatarUrl = "";
+        $name = "forsen";
+        $type = "Twitch";
+        $url = "twitch.tv/forsen";
+        $avatarUrl = '';
+        $_POST["avatar_url"] = null;
         if($_POST["avatar_url"] != null) {
             $avatarUrl = $_POST["avatar_url"];
         }
