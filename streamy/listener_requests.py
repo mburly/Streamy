@@ -1,3 +1,4 @@
+import os
 import subprocess
 import time
 from threading import Thread
@@ -7,20 +8,24 @@ import mysql.connector
 from .utils import Config
 
 c = Config()
+if(os.name == 'nt'):
+    MPV = "mpv.exe"
+else:
+    MPV = "mpv"
 SLEEP_TIME = 3
 MONITOR = 1
 
 def playTwitchStream(stream):
     time.sleep(SLEEP_TIME)
     try:
-        subprocess.run(["streamlink", "-p", "mpv.exe", "-a", f"\"-fs-screen={MONITOR}\"", stream, "best", "--twitch-low-latency"])
+        subprocess.run(["streamlink", "-p", MPV, "-a", f"\"-fs-screen={MONITOR}\"", stream, "best", "--twitch-low-latency"])
     except:
         return None
 
 def playYoutubeStream(stream):
     time.sleep(SLEEP_TIME)
     try:
-        subprocess.run(["streamlink", "-p", "mpv.exe", "-a", f"\"-fs-screen={MONITOR}\"", stream, "best"])
+        subprocess.run(["streamlink", "-p", MPV, "-a", f"\"-fs-screen={MONITOR}\"", stream, "best"])
     except:
         return None
 
