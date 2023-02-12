@@ -42,20 +42,27 @@
         $type = $_POST["type"];
         $url = $_POST["url"];
         $avatarUrl = "";
-        if($_POST["avatar_url"] != null) {
-            $avatarUrl = $_POST["avatar_url"];
+        $sql = 'SELECT id FROM channels WHERE name = "' . $name . '" AND type = "' . $type . '"';
+        $result = $conn->query($sql)->fetch_assoc();
+        if($result != null) {
+            returnWithError("channel already exists in db");
         }
         else {
-            if($type == "Twitch") {
-                $avatarUrl = getTwitchChannelProfilePicture($client_id, $secret, $name);
-                if($avatarUrl == null) {
-                    returnWithError("channel does not exist");
+            if($_POST["avatar_url"] != null) {
+                $avatarUrl = $_POST["avatar_url"];
+            }
+            else {
+                if($type == "Twitch") {
+                    $avatarUrl = getTwitchChannelProfilePicture($client_id, $secret, $name);
+                    if($avatarUrl == null) {
+                        returnWithError("channel does not exist");
+                    }
                 }
             }
+            $sql = 'INSERT INTO channels (name, type, url, avatar_url) VALUES ("' . $name . '","' . $type . '","' . $url . '","' . $avatarUrl .  '");';
+            $conn->query($sql);
+            returnInfo();
         }
-        $sql = 'INSERT INTO channels (name, type, url, avatar_url) VALUES ("' . $name . '","' . $type . '","' . $url . '","' . $avatarUrl .  '");';
-        $conn->query($sql);
-        returnInfo();
     }
 
     function getTwitchAuth($client_id, $secret) {

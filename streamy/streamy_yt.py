@@ -112,6 +112,8 @@ def getYoutubeChannelsNoAvatar():
     names = cursor.fetchall()
     channels = []
     for name in names:
+        if(name[0] is ''):
+            continue
         channels.append(name[0])
     cursor.close()
     db.close()
@@ -191,6 +193,9 @@ def getYoutubeProfilePictureUrl(channel_name):
         return profile_picture_url
     except:
         return None
+    
+def isRestrictedVideo(url):
+    return True if len(url.split('&amp')) > 1 else False
 
 def run():
     try:
@@ -226,9 +231,10 @@ def run():
                         deleteStream(stream_id)
                 else:
                     if channel not in live_channels:
-                        live_channels.append(channel)
-                        channelDbId = getChannelDbId(channel)
-                        insertNewStream(channelDbId, streamUrl)
+                        if not isRestrictedVideo(streamUrl):
+                            live_channels.append(channel)
+                            channelDbId = getChannelDbId(channel)
+                            insertNewStream(channelDbId, streamUrl)
             # time.sleep(60)
     except KeyboardInterrupt:
         return None
