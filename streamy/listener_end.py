@@ -1,14 +1,8 @@
-import os
 import psutil
 import time
 
+from .constants import MPV
 from .db import Database
-
-if(os.name == 'nt'):
-    PROC_NAME = "mpv.exe"
-else:
-    PROC_NAME = "mpv"
-
 
 def listenForFulfilledRequest():
     db = Database()
@@ -24,7 +18,7 @@ def listenForFulfilledRequest():
 
 def killMpv():
     for proc in psutil.process_iter():
-        if proc.name() == PROC_NAME:
+        if proc.name() == MPV:
             try:
                 proc.kill()
             except:

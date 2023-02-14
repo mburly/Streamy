@@ -1,11 +1,8 @@
-import configparser
 import os
 
-if (len(os.getcwd().replace("\\","/").split("/streamy")) == 1):
-    CONFIG_FILE = 'streamy.ini'
-else:
-    CONFIG_FILE = '../streamy.ini'
+import configparser
 
+from .constants import BANNER, CONFIG_FILE
 
 class Config:
     def __init__(self):
@@ -19,3 +16,11 @@ class Config:
         self.dbPassword = self.config['Db']['password']
         self.firefoxPath = self.config['Firefox']['path']
         self.dbName = 'streamy'
+
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
+
+def printBanner():
+    os.system("")
+    cls()
+    print(BANNER)

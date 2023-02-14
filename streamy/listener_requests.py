@@ -1,14 +1,10 @@
-import os
 import subprocess
 import time
 from threading import Thread
 
+from .constants import MPV
 from .db import Database
 
-if(os.name == 'nt'):
-    MPV = "mpv.exe"
-else:
-    MPV = "mpv"
 SLEEP_TIME = 3
 MONITOR = 1
 

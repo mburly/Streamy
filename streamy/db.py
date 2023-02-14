@@ -28,6 +28,26 @@ class Database:
         cursor.close()
         db.close()
 
+    def create(self):
+        db = mysql.connector.connect(
+                host=self.c.dbHost,
+                user=self.c.dbUser,
+                password=self.c.dbPassword
+        )
+        cursor = db.cursor()
+        cursor.execute(stmtCreateDb())
+        db.commit()
+        cursor.close()
+        db.close()
+        db = self.connect()
+        cursor = db.cursor()
+        stmts = [stmtCreateChannelsTable(), stmtCreateRequestsTable(), stmtCreateStreamsTable()]
+        for sql in stmts:
+            cursor.execute(sql)
+        db.commit()
+        cursor.close()
+        db.close()
+
     def get(self, sql):
         db = self.connect()
         cursor = db.cursor()
@@ -129,6 +149,23 @@ class Database:
         id = self.getChannelDbId(channel)
         self.commit(f'UPDATE channels SET avatar_url = "{url}" WHERE id={id};')
 
+    def verify(self):
+        try:
+            self.connect()
+        except:
+            self.create()
+
+def stmtCreateChannelsTable():
+    return f'CREATE TABLE channels (id INT AUTO_INCREMENT PRIMARY KEY, display_name VARCHAR(256) NOT NULL, name VARCHAR(256) NOT NULL, url VARCHAR(512) NOT NULL, avatar_url VARCHAR(512) NULL, type VARCHAR(256) NOT NULL) COLLATE utf8mb4_general_ci;'
+
+def stmtCreateDb():
+    return f'CREATE DATABASE IF NOT EXISTS streamy COLLATE utf8mb4_general_ci;'
+
+def stmtCreateRequestsTable():
+    return f'CREATE TABLE requests (id INT AUTO_INCREMENT PRIMARY KEY, stream_id INT NOT NULL, datetime DATETIME NOT NULL, done INT NULL) COLLATE utf8mb4_general_ci;'
+
+def stmtCreateStreamsTable():
+    return f'CREATE TABLE streams (id INT AUTO_INCREMENT PRIMARY KEY, channel_id INT NOT NULL, url VARCHAR(512) NOT NULL, live INT NULL) COLLATE utf8mb4_general_ci;'
 
 def stmtSelectTwitchChannels():
     return 'SELECT url FROM channels WHERE type = "Twitch";'

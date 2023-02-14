@@ -2,19 +2,14 @@ import os
 import time
 from threading import Event, Thread
 
-import pyfiglet
-
 from streamy import streamy, streamy_yt, listener_requests, listener_end
 from streamy.db import Database
-
-def cls():
-    os.system('cls' if os.name=='nt' else 'clear')
+from streamy.utils import printBanner
 
 if __name__ == '__main__':
-    os.system("")
-    cls()
-    banner = pyfiglet.figlet_format('Streamy', font="smkeyboard")
-    print(f'\033[0;92m{banner}\033[0m')
+    printBanner()
+    db = Database()
+    db.verify()
     run_event = Event()
     run_event.set()
     t1 = Thread(target = streamy_yt.run)
@@ -29,7 +24,6 @@ if __name__ == '__main__':
         while True:
             time.sleep(.1)
     except KeyboardInterrupt:
-        db = Database()
         db.deleteStreams()
         if(os.name == 'nt'):
             os._exit(0)
