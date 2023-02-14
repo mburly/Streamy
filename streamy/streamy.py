@@ -10,30 +10,30 @@ c = Config()
 class Streamy:
     def __init__(self):
         try:
-            db = Database()
-            live_channels = []
-            stream_id = 0
+            self.c = Config()
+            self.db = Database()
+            self.live_channels = []
             while True:
                 ping('streamy')
-                twitch_channels = db.getTwitchChannels()
+                twitch_channels = self.db.getTwitchChannels()
                 for channel in twitch_channels:
                     if(self.isTwitchStreamLive(channel)):
                         try:
-                            channelDbId = db.getChannelDbId(channel)
+                            channelDbId = self.db.getChannelDbId(channel)
                         except:
                             continue
-                        if not db.isStreamActive(channelDbId):
-                            db.insertNewTwitchStream(channel, channelDbId)
-                            if channel not in live_channels:
-                                live_channels.append(channel)
+                        if not self.db.isStreamActive(channelDbId):
+                            self.db.insertNewTwitchStream(channel, channelDbId)
+                            if channel not in self.live_channels:
+                                self.live_channels.append(channel)
                         else:
-                            if channel not in live_channels:
-                                live_channels.append(channel)
+                            if channel not in self.live_channels:
+                                self.live_channels.append(channel)
                     else:
-                        if(channel in live_channels):
-                            live_channels.remove(channel)
-                            stream_id = db.getStreamDbId(channel)
-                            db.deleteStream(stream_id)
+                        if(channel in self.live_channels):
+                            self.live_channels.remove(channel)
+                            self.stream_id = self.db.getStreamDbId(channel)
+                            self.db.deleteStream(self.stream_id)
                 time.sleep(SLEEP['streamy'])
         except KeyboardInterrupt:
             return None

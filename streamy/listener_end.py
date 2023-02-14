@@ -8,6 +8,7 @@ from .utils import ping
 class ListenerEnd:
     def __init__(self):
         try:
+            self.db = Database()
             while True:
                 ping('listener_end')
                 self.listenForFulfilledRequest()
@@ -15,11 +16,10 @@ class ListenerEnd:
             return None
 
     def listenForFulfilledRequest(self):
-        db = Database()
         stream_running = True
         while(stream_running):
             try:
-                if(db.isRequestFulfilled()):
+                if(self.db.isRequestFulfilled()):
                     self.killMpv()
                     stream_running = False
             except:
