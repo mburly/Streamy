@@ -20,6 +20,9 @@ class Config:
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
+def ping(module):
+    print(f'[PING] {module}')
+
 def printBanner():
     os.system("")
     cls()

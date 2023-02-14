@@ -2,8 +2,11 @@ import os
 import time
 from threading import Event, Thread
 
-from streamy import streamy, streamy_yt, listener_requests, listener_end
 from streamy.db import Database
+from streamy.listener_end import ListenerEnd
+from streamy.listener_requests import ListenerRequests
+from streamy.streamy import Streamy
+from streamy.streamy_yt import StreamyYT
 from streamy.utils import printBanner
 
 if __name__ == '__main__':
@@ -12,10 +15,10 @@ if __name__ == '__main__':
     db.verify()
     run_event = Event()
     run_event.set()
-    t1 = Thread(target = streamy_yt.run)
-    t2 = Thread(target = streamy.run)
-    t3 = Thread(target = listener_requests.run)
-    t4 = Thread(target = listener_end.run)
+    t1 = Thread(target = StreamyYT)
+    t2 = Thread(target = Streamy)
+    t3 = Thread(target = ListenerRequests)
+    t4 = Thread(target = ListenerEnd)
     t1.start()
     t2.start()
     t3.start()

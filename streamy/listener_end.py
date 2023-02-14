@@ -1,34 +1,35 @@
 import psutil
 import time
 
-from .constants import MPV
+from .constants import MPV, SLEEP
 from .db import Database
+from .utils import ping
 
-def listenForFulfilledRequest():
-    db = Database()
-    stream_running = True
-    while(stream_running):
+class ListenerEnd:
+    def __init__(self):
         try:
-            if(db.isRequestFulfilled()):
-                killMpv()
-                stream_running = False
-        except:
+            while True:
+                ping('listener_end')
+                self.listenForFulfilledRequest()
+        except KeyboardInterrupt:
             return None
-        time.sleep(5)
 
-def killMpv():
-    for proc in psutil.process_iter():
-        if proc.name() == MPV:
+    def listenForFulfilledRequest(self):
+        db = Database()
+        stream_running = True
+        while(stream_running):
             try:
-                proc.kill()
+                if(db.isRequestFulfilled()):
+                    self.killMpv()
+                    stream_running = False
             except:
                 return None
+            time.sleep(SLEEP['listener_end'])
 
-def run():
-    try:
-        print('Listening for fulfilled requests...')
-        while True:
-            print('[PING] listener_end.py')
-            listenForFulfilledRequest()
-    except KeyboardInterrupt:
-        return None
+    def killMpv(self):
+        for proc in psutil.process_iter():
+            if proc.name() == MPV:
+                try:
+                    proc.kill()
+                except:
+                    return None
