@@ -5,6 +5,7 @@ from threading import Event, Thread
 import pyfiglet
 
 from streamy import streamy, streamy_yt, listener_requests, listener_end
+from streamy.db import Database
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -28,7 +29,8 @@ if __name__ == '__main__':
         while True:
             time.sleep(.1)
     except KeyboardInterrupt:
-        streamy.deleteStreams()
+        db = Database()
+        db.deleteStreams()
         if(os.name == 'nt'):
             os._exit(0)
         else:

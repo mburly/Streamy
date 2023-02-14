@@ -1,6 +1,11 @@
 import configparser
+import os
 
-CONFIG_FILE = 'streamy.ini'
+if (len(os.getcwd().replace("\\","/").split("/streamy")) == 1):
+    CONFIG_FILE = 'streamy.ini'
+else:
+    CONFIG_FILE = '../streamy.ini'
+
 
 class Config:
     def __init__(self):
