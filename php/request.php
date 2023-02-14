@@ -36,7 +36,6 @@
         while($row = $result->fetch_assoc()) {
             returnInfo($row["id"]);
         }
-        // returnInfo();
     }
 
     function getRequestInfo()
@@ -55,7 +54,6 @@
         $retValue = '{"id":0,"error":"' . $err . '"}';
         sendResultInfoAsJson( $retValue );
     }
-    
     
     function returnInfo($id)
     {

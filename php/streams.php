@@ -28,7 +28,7 @@
         returnWithError($conn->connect_error);
     }
     else {
-        $sql = 'SELECT s.id AS stream_id, c.name AS name, c.display_name AS display_name, c.url AS url, c.avatar_url AS avatar_url, c.type AS type FROM streams s INNER JOIN channels c ON s.channel_id=c.id WHERE s.live=1 ORDER BY c.name;';
+        $sql = 'SELECT s.id AS stream_id, c.name AS name, c.display_name AS display_name, c.url AS url, c.avatar_url AS avatar_url, c.type AS type FROM streams s INNER JOIN channels c ON s.channel_id=c.id WHERE s.live=1 ORDER BY c.display_name;';
         $result = $conn->query($sql);
         $stream_ids = array();
         $channels = array();

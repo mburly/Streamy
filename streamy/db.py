@@ -120,7 +120,7 @@ class Database:
         if live is None:
             return False
         else:
-            return live[0] == 1
+            return live == 1
 
     def updateStream(self, stream_id, url):
         self.commit(f'UPDATE streams SET url = "{url}" WHERE id={stream_id};')

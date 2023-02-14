@@ -59,7 +59,7 @@
                     }
                 }
             }
-            $sql = 'INSERT INTO channels (name, type, url, avatar_url) VALUES ("' . $name . '","' . $type . '","' . $url . '","' . $avatarUrl .  '");';
+            $sql = 'INSERT INTO channels (name, display_name, type, url, avatar_url) VALUES ("' . $name . '","' . $name . '","' . $type . '","' . $url . '","' . $avatarUrl .  '");';
             $conn->query($sql);
             returnInfo();
         }
