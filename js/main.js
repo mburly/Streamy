@@ -48,7 +48,7 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
         hideAddChannelButtonSubmitLoader();
     }
     else {
-        if(url.split('youtube.com/@').length > 1) {
+        if(url.split('youtube.com/@').length > 1 && url != 'youtube.com/@') {
             // youtube url
             var channel_name = url.split('@')[1];
             $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Youtube"})
@@ -71,7 +71,7 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
                 }
             });
         }
-        else if(url.split('twitch.tv/').length > 1) {
+        else if(url.split('twitch.tv/').length > 1 && url != 'twitch.tv/') {
             // twitch url
             var channel_name = url.split('/')[1];
             $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Twitch"})
@@ -212,7 +212,6 @@ $('body').on('click', '#removeChannelsDonebutton', function() {
 
 function loadStreams() {
     $.get("php/streams.php", function(data, status) {
-        console.log(data);
         var data = JSON.parse(data);
         if(data["error"] == "1") {
             var ids = getStreamIdsOnScreen();
