@@ -43,7 +43,7 @@ $('body').on('click', '.panel-block', function() {
 $('body').on('click', '#addChannelButtonSubmit', function() {
     $('#addChannelButtonSubmit').text('');
     $('#addChannelButtonSubmit').append('<span class="loader" id="addChannelButtonSubmitLoader"></span>');
-    var url = $('#channelUrlInput')[0].value;
+    var url = $('#channelUrlInput')[0].value.toLowerCase();
     if(url == '') {
         hideAddChannelButtonSubmitLoader();
     }
@@ -76,7 +76,6 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
             var channel_name = url.split('/')[1];
             $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Twitch"})
             .done(function(data) {
-                console.log(data);
                 data = JSON.parse(data);
                 if(data["error"] != "") {
                     if(data["error"] == "channel exists") {
@@ -213,6 +212,7 @@ $('body').on('click', '#removeChannelsDonebutton', function() {
 
 function loadStreams() {
     $.get("php/streams.php", function(data, status) {
+        console.log(data);
         var data = JSON.parse(data);
         if(data["error"] == "1") {
             var ids = getStreamIdsOnScreen();
