@@ -12,5 +12,4 @@ else:
 MONITOR = 1
 SLEEP = {'listener_end':5,
          'listener_requests':3,
-         'streamy':1,
-}
+         'streamy':1}

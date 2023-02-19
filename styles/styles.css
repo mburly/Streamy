@@ -19,6 +19,18 @@
     #addChannelDoneButton {
         margin-top:10px !important; 
     }
+
+    #forceCloseButton, #addChannelButton, #editChannelsButton, #editChannelsDoneButton, #removeChannelsButton, #removeChannelsDonebutton {
+        float:none !important;
+    }
+
+    #addChannelButton, #editChannelsButton, #editChannelsDoneButton, #removeChannelsButton, #removeChannelsDonebutton {
+        margin-top:20px !important;
+    }
+
+    #addChannelButtonSubmit {
+        margin-top:10px !important;
+    }
 }
 
 html {
@@ -127,11 +139,23 @@ nav {
 #badChannelMessage {
     display:none;
     width:425px;
-    height:100px;
+    height:130px;
     font-size:16px;
     margin-top:5px;
     margin-left:auto;
     margin-right:auto;
+    animation: fadeIn 1s;
+}
+
+#channelExistsMessage {
+    display:none;
+    width:425px;
+    height:115px;
+    font-size:16px;
+    margin-top:5px;
+    margin-left:auto;
+    margin-right:auto;
+    animation: fadeIn 1s;
 }
 
 .button.is-primary {
@@ -301,6 +325,42 @@ nav {
     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
   }
+
+
+.loader {
+    width: 28px;
+    height: 28px;
+    border: 5px solid #FFF;
+    border-bottom-color: #047000;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   
   /* Animations to fade the snackbar in and out */
   @-webkit-keyframes fadein {

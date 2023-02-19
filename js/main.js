@@ -16,7 +16,6 @@ var removeListener = function() {
         if (index == -1) {
             _removeChannels.push(this.id);
         }
-        console.log(_removeChannels);
     } 
     else {
         this.style.backgroundColor = "white";
@@ -24,9 +23,8 @@ var removeListener = function() {
         if (index !== -1) {
             _removeChannels.splice(index, 1);
         }
-        console.log(_removeChannels);
     }
-  };
+};
 
 $('body').on('click', '.panel-block', function() {
     var id = $(this).attr('id');
@@ -38,15 +36,16 @@ $('body').on('click', '.panel-block', function() {
     var id = $(this).attr('id').split('-');
     var stream_id = id[1];
     $.post("php/request.php", {stream_id: stream_id});
-    var toast = document.getElementById("snackbar");
-    toast.className = "show";
-    setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    showToast();
     _active = true;
 });
 
 $('body').on('click', '#addChannelButtonSubmit', function() {
+    $('#addChannelButtonSubmit').text('');
+    $('#addChannelButtonSubmit').append('<span class="loader" id="addChannelButtonSubmitLoader"></span>');
     var url = $('#channelUrlInput')[0].value;
     if(url == '') {
+        hideAddChannelButtonSubmitLoader();
     }
     else {
         if(url.split('youtube.com/@').length > 1) {
@@ -54,35 +53,56 @@ $('body').on('click', '#addChannelButtonSubmit', function() {
             var channel_name = url.split('@')[1];
             $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Youtube"})
             .done(function(data) {
+                data = JSON.parse(data);
+                if(data["error"] != "") {
+                    if(data["error"] == "channel exists") {
+                        showChannelExistsAlert();
+                    }
+                    else if(data["error"] == "channel does not exist") {
+                        showChannelDoesNotExistAlert();
+                    }
+                }
+                else {
+                    showToast();
+                    hide('addChannelCard');
+                    hide('badChannelMessage');
+                    hide('channelExistsMessage');
+                    hideAddChannelButtonSubmitLoader();
+                }
             });
-            var toast = document.getElementById("snackbar");
-            toast.className = "show";
-            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-            hide('addChannelCard');
         }
         else if(url.split('twitch.tv/').length > 1) {
             // twitch url
             var channel_name = url.split('/')[1];
             $.post("php/addChannel.php", {name: channel_name, url: url, avatar_url: null, type: "Twitch"})
             .done(function(data) {
+                console.log(data);
+                data = JSON.parse(data);
+                if(data["error"] != "") {
+                    if(data["error"] == "channel exists") {
+                        showChannelExistsAlert();
+                    }
+                    else if(data["error"] == "channel does not exist") {
+                        showChannelDoesNotExistAlert();
+                    }
+                }
+                else {
+                    showToast();
+                    hide('addChannelCard');
+                    hide('badChannelMessage');
+                    hide('channelExistsMessage');
+                    hideAddChannelButtonSubmitLoader();
+                }
             });
-            var toast = document.getElementById("snackbar");
-            toast.className = "show";
-            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-            hide('addChannelCard');
         }
         else {
-            // display error
-            show('badChannelMessage');
+            showChannelDoesNotExistAlert();
         }
-        document.getElementById("channelUrlInput").value = '';
     }
 });
 
 $('body').on('click', '#forceCloseButton', function() {
-    var toast = document.getElementById("snackbar");
-    toast.className = "show";
-    setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    showToast();
     $.get("php/updateLastRequest.php", function() {
     });
     _active = false;
@@ -93,6 +113,9 @@ $('body').on('click', '#addChannelButton', function() {
 });
 
 $('body').on('click', '#closeAddChannelButton', function() {
+    document.getElementById("channelUrlInput").value = '';
+    hide('badChannelMessage');
+    hide('channelExistsMessage');
     hide('addChannelCard');
 });
 
@@ -287,10 +310,33 @@ function remove(id) {
 		document.getElementById(id).remove();
 	}
 	catch(err) {
-		console.log(err);
 	}
 }
 
 function show(id) {
     $('#' + id).css("display", "block");
+}
+
+function hideAddChannelButtonSubmitLoader() {
+    hide('addChannelButtonSubmitLoader');
+    $('#addChannelButtonSubmit').text('Add Channel');
+}
+
+function showChannelDoesNotExistAlert() {
+    hide('channelExistsMessage');
+    show('badChannelMessage');
+    hideAddChannelButtonSubmitLoader();
+}
+
+function showChannelExistsAlert() {
+    hide('badChannelMessage');
+    show('channelExistsMessage');
+    hideAddChannelButtonSubmitLoader();
+
+}
+
+function showToast() {
+    var toast = document.getElementById("snackbar");
+    toast.className = "show";
+    setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
 }

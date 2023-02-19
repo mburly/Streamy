@@ -45,7 +45,7 @@
         $sql = 'SELECT id FROM channels WHERE name = "' . $name . '" AND type = "' . $type . '"';
         $result = $conn->query($sql)->fetch_assoc();
         if($result != null) {
-            returnWithError("channel already exists in db");
+            returnWithError("channel exists");
         }
         else {
             if($_POST["avatar_url"] != null) {
@@ -56,6 +56,7 @@
                     $avatarUrl = getTwitchChannelProfilePicture($client_id, $secret, $name);
                     if($avatarUrl == null) {
                         returnWithError("channel does not exist");
+                        return;
                     }
                 }
             }

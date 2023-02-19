@@ -36,8 +36,8 @@ class Streamy:
                     else:
                         if(channel in self.live_channels):
                             self.live_channels.remove(channel)
-                            self.stream_id = self.db.getStreamDbId(channel)
-                            self.db.deleteStream(self.stream_id)
+                            self.streamId = self.db.getStreamDbId(channel)
+                            self.db.deleteStream(self.streamId)
                 time.sleep(SLEEP['streamy'])
         except KeyboardInterrupt:
             return None
@@ -71,32 +71,32 @@ class StreamyYT:
             self.live_channels = []
             while True:
                 ping('streamy_yt')
-                avatar_queue = self.db.getYoutubeChannelsNoAvatar()
-                channels = self.db.getYoutubeChannels()
-                if(channels == []):
-                    while(channels == []):
+                self.avatar_queue = self.db.getYoutubeChannelsNoAvatar()
+                self.channels = self.db.getYoutubeChannels()
+                if(self.channels == []):
+                    while(self.channels == []):
                         time.sleep(SLEEP['streamy'])
-                        channels = self.db.getYoutubeChannels()
-                for channel in avatar_queue:
+                        self.channels = self.db.getYoutubeChannels()
+                for channel in self.avatar_queue:
                     if not self.db.channelAvatarExists(channel):
                         url = self.getYoutubeProfilePictureUrl(channel)
                         if(url is None):
-                            avatar_queue.remove(channel)
+                            self.avatar_queue.remove(channel)
                             continue
                         self.db.updateAvatar(channel, url)
-                        avatar_queue.remove(channel)
+                        self.avatar_queue.remove(channel)
                     else:
-                        avatar_queue.remove(channel)
-                for channel in channels:
+                        self.avatar_queue.remove(channel)
+                for channel in self.channels:
                     streamUrl = self.getYoutubeStreamUrl(channel)
                     print(f'{channel}: {streamUrl}')
                     if(streamUrl is None):
                         if(channel in self.live_channels):
-                            stream_id = self.db.getStreamDbId(channel)
-                            if stream_id is None:
+                            streamId = self.db.getStreamDbId(channel)
+                            if streamId is None:
                                 continue
                             self.live_channels.remove(channel)
-                            self.db.deleteStream(stream_id)
+                            self.db.deleteStream(streamId)
                     else:
                         channelDbId = self.db.getChannelDbId(channel)
                         if channel not in self.live_channels:
@@ -104,10 +104,13 @@ class StreamyYT:
                                 self.live_channels.append(channel)
                                 self.db.insertNewYoutubeStream(channelDbId, streamUrl)
                         else:
-                            stream_id = self.db.getStreamDbId(channel)
-                            currentDbUrl = self.db.getDbStreamUrl(stream_id)
+                            streamId = self.db.getStreamDbId(channel)
+                            currentDbUrl = self.db.getDbStreamUrl(streamId)
                             if(streamUrl != currentDbUrl):
-                                self.db.updateStream(stream_id, streamUrl)
+                                if not self.isRestrictedVideo(streamUrl):
+                                    self.db.updateStream(streamId, streamUrl)
+                                else:
+                                    self.db.deleteStream(streamId)
         except KeyboardInterrupt:
             return None
 
@@ -130,7 +133,6 @@ class StreamyYT:
             return None
         
     # def getYoutubeStreamUrl(self, channel_name):
-    #     api_key = c.youtubeApiKey
     #     url = f"https://www.googleapis.com/youtube/v3/search?part=snippet&q={channel_name}&type=channel&key={self.c.youtubeApiKey}"
     #     try:
     #         response = requests.get(url)
@@ -208,8 +210,8 @@ class ListenerRequests:
                 except:
                     id = self.db.getLastRequestId()
                 if(self.prevId != id):
-                    stream_id = self.db.getLastRequestStreamId()
-                    url = self.db.getLastRequestUrl(stream_id)
+                    streamId = self.db.getLastRequestStreamId()
+                    url = self.db.getLastRequestUrl(streamId)
                     if(self.db.getLastRequestChannelType() == "Youtube"):
                         Thread(target = self.playIntro).start()
                         Thread(target = self.playYoutubeStream(url)).start()

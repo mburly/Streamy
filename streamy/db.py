@@ -7,18 +7,21 @@ class Database:
         self.c = Config()
     
     def connect(self):
-        db = mysql.connector.connect(
-                host=self.c.dbHost,
-                user=self.c.dbUser,
-                password=self.c.dbPassword,
-                database=self.c.dbName
-            )
-        return db
+        try:
+            db = mysql.connector.connect(
+                    host=self.c.dbHost,
+                    user=self.c.dbUser,
+                    password=self.c.dbPassword,
+                    database=self.c.dbName
+                )
+            return db
+        except:
+            return None
     
     def commit(self, sql):
         db = self.connect()
         cursor = db.cursor()
-        if(type(sql) == list):
+        if(isinstance(sql, list)):
             for stmt in sql:
                 cursor.execute(stmt)
             db.commit()
@@ -39,14 +42,7 @@ class Database:
         db.commit()
         cursor.close()
         db.close()
-        db = self.connect()
-        cursor = db.cursor()
-        stmts = [stmtCreateChannelsTable(), stmtCreateRequestsTable(), stmtCreateStreamsTable()]
-        for sql in stmts:
-            cursor.execute(sql)
-        db.commit()
-        cursor.close()
-        db.close()
+        self.commit([stmtCreateChannelsTable(), stmtCreateRequestsTable(), stmtCreateStreamsTable()])
 
     def get(self, sql):
         db = self.connect()
@@ -80,7 +76,7 @@ class Database:
         cursor.close()
         db.close()
         return vals
-    
+        
     def channelAvatarExists(self, channel):
         url = self.get(f'SELECT avatar_url FROM channels WHERE name = "{channel}";')
         if url is None or url == '':
@@ -150,9 +146,7 @@ class Database:
         self.commit(f'UPDATE channels SET avatar_url = "{url}" WHERE id={id};')
 
     def verify(self):
-        try:
-            self.connect()
-        except:
+        if(self.connect() is None):
             self.create()
 
 def stmtCreateChannelsTable():
